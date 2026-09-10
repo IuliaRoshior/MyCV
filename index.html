@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IuliaRoshior — Developer & Problem Solver</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ 01 HERO ============ -->
+<header id="hero" class="wrap">
+  <div>
+    <pre>$ whoami</pre>
+    <h1>Hi, I'm <span>IuliaRoshior</span><br>
+        I turn your problem into<br>a solved problem<span class="blink"></span></h1>
+    <p class="sub">Applied Informatics student · C · C++ · Python · JS<br>
+       Available anytime — no day job competes for your deadlines.</p>
+    <button class="btn" onclick="document.getElementById('story').scrollIntoView()">My story ▾</button>
+    <button class="btn" style="border-color:var(--cyan);color:var(--cyan)"
+      onclick="document.getElementById('contact').scrollIntoView()">Hire me</button>
+  </div>
+</header>
+
+<!-- ============ 02 STORY ============ -->
+<section id="story"><div class="wrap">
+  <p class="tag">02 — my story</p>
+  <h2>Thirteen years of solving people's problems</h2>
+  <div class="timeline">
+
+    <div class="period"><button onclick="toggle(this)">
+      <span class="years">2012–14 · age 16–18</span>
+      <div class="role">Waitress / Hostess</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><path d="M3 11h18M5 11v7h14v-7M8 11V8m8 3V8"/></svg></div>
+      <div class="card"><div class="card-inner">
+        First job, first lesson: read the room in seconds. A busy dinner service teaches
+        prioritization better than any course.
+        <br><span class="skill-tag">reading people</span><span class="skill-tag">grace under pressure</span>
+      </div></div></div>
+
+    <div class="period"><button onclick="toggle(this)">
+      <span class="years">2014–16 · age 19–21</span>
+      <div class="role">Secretary — French construction firm</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6"/></svg></div>
+      <div class="card"><div class="card-inner">
+        Document flow, discipline, and cross-language communication in an international environment.
+        Nothing gets lost on my watch.
+        <br><span class="skill-tag">organization</span><span class="skill-tag">international clients</span>
+      </div></div></div>
+
+    <div class="period"><button onclick="toggle(this)">
+      <span class="years">2016–17 · age 21–22</span>
+      <div class="role">Call center — cold calls</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a12 12 0 005 5l2-3 5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></div>
+      <div class="card"><div class="card-inner">
+        A hundred "no"s a day. After that, rejection stops being scary — in sales,
+        in negotiations, anywhere.
+        <br><span class="skill-tag">resilience</span><span class="skill-tag">communication</span>
+      </div></div></div>
+
+    <div class="period"><button onclick="toggle(this)">
+      <span class="years">2017–21 · age 22–26</span>
+      <div class="role">Photo lab operator</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2m0 14v2M3 12h2m14 0h2"/></svg></div>
+      <div class="card"><div class="card-inner">
+        Peak multitasking: printing, scanning, taking orders — all simultaneously. Clients arrive with
+        <i>"it's the anniversary today"</i>, <i>"we didn't plan anything"</i> — and no ready brief.
+        So you create one. You design the solution while they describe the feeling.
+        <br><span class="skill-tag">multitasking</span><span class="skill-tag">creative problem-solving</span><span class="skill-tag">deadlines measured in hours</span>
+      </div></div></div>
+
+    <div class="period"><button onclick="toggle(this)">
+      <span class="years">2021–23 · age 26–28</span>
+      <div class="role">Sports club administration</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><path d="M4 17l4-10h4l-4 10zm8 0l4-10h4l-4 10z"/></svg></div>
+      <div class="card"><div class="card-inner">
+        A deliberate pause: a calm job to free up time and energy — plus a gym discount.
+        Three years of self-study in programming happened here.
+        <br><span class="skill-tag">self-directed learning</span><span class="skill-tag">long-term thinking</span>
+      </div></div></div>
+
+    <div class="period open"><button onclick="toggle(this)">
+      <span class="years">now · age 29</span>
+      <div class="role">University — Applied Informatics</div></button>
+      <div class="artifact"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12"/><path d="M8 20h8M7 9l2 2-2 2m5 0h4"/></svg></div>
+      <div class="card"><div class="card-inner" style="display:block">
+        Public university, major in Applied Informatics. First year covered:
+        C, C++, Python, JavaScript, operating systems (Linux &amp; Windows),
+        computer networks, OOP. University projects + personal pet projects.
+        This is where I found my path.
+        <br><span class="skill-tag">C</span><span class="skill-tag">C++</span><span class="skill-tag">Python</span><span class="skill-tag">JavaScript</span><span class="skill-tag">Linux</span><span class="skill-tag">networking</span><span class="skill-tag">OOP</span>
+      </div></div></div>
+
+  </div>
+</div></section>
+
+<!-- ============ 03 MATH ============ -->
+<section id="math"><div class="math-bg">
+  <span style="left:5%">∫</span><span style="left:25%;animation-delay:-4s">Σ</span>
+  <span style="left:55%;animation-delay:-8s">∂</span><span style="left:80%;animation-delay:-2s">π</span>
+  <span style="left:70%;animation-delay:-6s">√</span><span style="left:40%;animation-delay:-10s">λ</span>
+</div><div class="wrap">
+  <p class="tag">03 — mathematics</p>
+  <h2>The way I think</h2>
+  <p>I have always liked mathematics. Not as a school subject — as a way of seeing.</p>
+  <div class="quote">I don't just solve problems.<br>I like figuring out <b>why</b> they work.</div>
+  <p>Six to seven hours of math per week through a physics-and-math school profile.
+     Now at university, when classmates get stuck on higher mathematics,
+     we sit down together and take the topic apart until it clicks.
+     Those sessions are some of my favorite parts of studying.</p>
+  <p style="margin-top:20px;color:var(--dim)">Mathematics → logic → the ability to enter any complex system and find structure. That's exactly what programming is.</p>
+  <div class="milestones">
+    <div class="ms"><b>12 years</b>School with advanced math profile</div>
+    <div class="ms"><b>6–7 hrs/week</b>Mathematics, every week, for years</div>
+    <div class="ms"><b>Now</b>Helping classmates master higher math</div>
+  </div>
+</div></section>
+
+<!-- ============ 04 HOW I WORK ============ -->
+<section id="work"><div class="wrap">
+  <p class="tag">04 — how i work</p>
+  <h2>What I bring to a project</h2>
+  <div class="bring-grid">
+    <div class="bring"><h3>I learn fast.</h3><p>New technology? Unfamiliar domain? Give me a week and the job is done. I genuinely enjoy figuring things out from zero.</p></div>
+    <div class="bring"><h3>I work independently.</h3><p>No hand-holding required. Give me a goal and check back when it matters.</p></div>
+    <div class="bring"><h3>I handle chaos.</h3><p>Multiple tasks under deadline pressure was literally my daily job for four years. Chaos is a familiar environment.</p></div>
+    <div class="bring"><h3>I talk to people.</h3><p>Over a decade of client-facing work doesn't disappear. I ask the right questions and keep you updated without being chased.</p></div>
+    <div class="bring"><h3>I don't need a perfect brief.</h3><p>If you don't know exactly what you want yet — that's fine. I'll help shape vague ideas into a concrete task.</p></div>
+    <div class="bring"><h3>I'm available.</h3><p>No full-time job competing with your project. Your deadline is my priority.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ 05 PROJECTS ============ -->
+<section id="projects"><div class="wrap">
+  <p class="tag">05 — what i can build</p>
+  <h2>Projects</h2>
+  <div class="stack">
+    <span class="hl">C</span><span class="hl">C++</span><span class="hl">Python</span><span class="hl">JavaScript</span>
+    <span>Linux</span><span>Windows</span><span>OOP</span><span>Networks</span><span>HTML/CSS</span>
+  </div>
+  <!-- TODO: replace placeholders with real projects -->
+  <div class="proj"><b>[ PROJECT 1 ]</b> — ShineAuto is a modern landing page for a car wash service. It features a clean design, intuitive navigation, and a simple, user-friendly experience that helps visitors quickly find information and book a service. <a href="https://iuliaroshior.github.io/CarWash/">GitHub ↗</a></div>
+  <div class="proj"><b>[ PROJECT 2 ]</b> — A simple mood calendar to track your feelings, write daily notes, and understand your emotional patterns. <a href="https://iuliaroshior.github.io/MoodCalendar/">GitHub ↗</a></div>
+</div></section>
+
+<!-- ============ 06 OFF WORK ============ -->
+<section id="off"><div class="wrap">
+  <p class="tag">06 — when i'm not working</p>
+  <h2>Select an item to inspect</h2>
+  <div class="inv">
+    <button class="slot" data-loot="loot-music"><span class="ico">🎧</span><small>Music</small></button>
+    <button class="slot" data-loot="loot-games"><span class="ico">🎮</span><small>Games</small></button>
+    <button class="slot" data-loot="loot-stitch"><span class="ico">🧵</span><small>Embroidery</small></button>
+    <button class="slot" data-loot="loot-paint"><span class="ico">🎨</span><small>Painting</small></button>
+    <button class="slot" data-loot="loot-walk"><span class="ico">🌙</span><small>Night walks</small></button>
+    <button class="slot" data-loot="loot-drive"><span class="ico">🚗</span><small>Road trips</small></button>
+    <button class="slot" data-loot="loot-anime"><span class="ico">📖</span><small>Anime</small></button>
+    <button class="slot" data-loot="loot-board"><span class="ico">🎲</span><small>Board games</small></button>
+  </div>
+  <div class="loot" id="loot"></div>
+</div></section>
+
+<!-- ============ SOUNDTRACK ============ -->
+<section><div class="wrap">
+  <p class="tag">bonus — my soundtrack</p>
+  <h2>On repeat</h2>
+  <div class="player">
+    <div class="p-screen">
+      ▶ NOW PLAYING<br>
+      <b>aurora_mood.mix</b><br>
+      <span style="color:var(--dim)">[visualizer only — real speakers recommended]</span>
+      <div class="p-bar"><div class="p-fill"></div></div>
+    </div>
+    <div class="genres">
+      <i>new metal</i><i>hard metal</i><i>metal vocals</i><i>rock '80s</i>
+      <i>ethnic trap</i><i>world bass</i><i>indie</i><i>folk</i>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 07 CONTACT ============ -->
+<section id="contact"><div class="wrap">
+  <p class="tag">07 — let's make something</p>
+  <h2>Your headache, solved</h2>
+  <p class="big">Describe the task. I'll tell you how —<br>and for how much. Fast.</p>
+  <p style="color:var(--dim);margin-bottom:24px">
+    📧 <a href="mailto:julieroshior2018@gmail.com">EMAIL</a><br>
+    💬 Telegram: <a href="https://t.me/julieRo">@julieRo</a><br>
+    🐙 GitHub: <a href="https://github.com/IuliaRoshior">github.com/IuliaRoshior</a>
+  </p>
+</div></section>
+
+<footer><div class="wrap">
+  © IuliaRoshior · built by hand, no frameworks harmed<br>
+  psst… <span id="term-trigger">&gt;_</span>
+</div></footer>
+
+<!-- ============ TERMINAL ============ -->
+<div id="terminal">
+  <div class="t-head"><span>guest@julie:~</span><button id="term-close">✕</button></div>
+  <div class="t-body" id="tbody">
+    <div>Welcome. Type <span class="prompt">help</span> for commands.</div>
+    <div class="t-in"><span class="prompt">$</span><input id="tin" autocomplete="off"></div>
+  </div>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
