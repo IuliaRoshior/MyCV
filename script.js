@@ -1,464 +1,353 @@
-/* =========================================
-   TIMELINE ACCORDION
-   ========================================= */
+/* ==========================================================
+   IULIA ROSHIOR / PORTFOLIO INTERACTIONS
+   All interactions are initialized after the page markup loads.
+   ========================================================== */
 
-function toggle(button) {
-  const period = button.parentElement;
-  const card = period.querySelector(".card");
-  const wasOpen = period.classList.contains("open");
+"use strict";
 
-  // Close all other periods
-  document.querySelectorAll(".period.open").forEach((item) => {
-    item.classList.remove("open");
+/* Timeline: keep one period expanded and its accessible state in sync. */
+const timelinePeriods = [...document.querySelectorAll(".timeline .period")];
 
-    const itemCard = item.querySelector(".card");
-    if (itemCard) {
-      itemCard.style.maxHeight = null;
-    }
-  });
-
-  // Open selected period
-  if (!wasOpen) {
-    period.classList.add("open");
-
-    if (card) {
-      card.style.maxHeight = card.scrollHeight + "px";
-    }
+function updateTimelineHeight(period) {
+  const panel = period?.querySelector(".card");
+  const content = panel?.querySelector(".card-inner");
+  if (panel && content && period.classList.contains("open")) {
+    panel.style.maxHeight = `${content.scrollHeight}px`;
   }
 }
 
+function setTimelineOpen(period, expanded) {
+  if (!period) return;
 
-/* =========================================
-   INVENTORY / HOBBIES
-   ========================================= */
+  const button = period.querySelector("button");
+  const panel = period.querySelector(".card");
+  if (!button || !panel) return;
 
+  period.classList.toggle("open", expanded);
+  button.setAttribute("aria-expanded", String(expanded));
+  panel.setAttribute("aria-hidden", String(!expanded));
+  panel.inert = !expanded;
+  panel.style.maxHeight = expanded ? `${panel.querySelector(".card-inner").scrollHeight}px` : "0px";
+}
+
+function initializeTimeline() {
+  // Resolve any inconsistent initial state to a single expanded period.
+  const initiallyOpen = timelinePeriods.find((period) => period.classList.contains("open"));
+  timelinePeriods.forEach((period) => {
+    setTimelineOpen(period, period === initiallyOpen);
+
+    period.querySelector("button")?.addEventListener("click", () => {
+      const shouldOpen = !period.classList.contains("open");
+      timelinePeriods.forEach((other) => setTimelineOpen(other, shouldOpen && other === period));
+    });
+  });
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(() => {
+      timelinePeriods.forEach(updateTimelineHeight);
+    });
+    timelinePeriods.forEach((period) => {
+      const content = period.querySelector(".card-inner");
+      if (content) observer.observe(content);
+    });
+  } else {
+    window.addEventListener("resize", () => timelinePeriods.forEach(updateTimelineHeight));
+  }
+}
+
+initializeTimeline();
+
+/* Hobbies: show only the selected inventory item's description. */
 const LOOT = {
   "loot-music": {
-    t: "Music",
-    d: `New metal, hard metal, metal vocals, '80s rock — for energy.
-Ethnic trap and world bass — for focus.
-Indie and folk — for everything else.`
+    title: "Music",
+    description: `Nu metal, heavy metal, metal vocals, '80s rock: for energy.
+Ethnic trap and world bass: for focus.
+Indie and folk: for everything else.`
   },
-
   "loot-games": {
-    t: "Games",
-    d: `Minecraft, Civilization V, The Witcher, The Last of Us, MOBAs —
+    title: "Games",
+    description: `Minecraft, Civilization V, The Witcher, The Last of Us, MOBAs,
 and a soft spot for retro games from the Dendy and PS1 era.
 
 "It doesn't look primitive when you understand how it works."
 
 Palette tricks, sprite compression, counting CPU cycles.
-The Silent Hill fog wasn't art —
-it was a hardware limitation turned into aesthetic.
+The Silent Hill fog wasn't art: it was a hardware limitation
+turned into an aesthetic.
 
 Constraints breed creativity.`
   },
-
   "loot-stitch": {
-    t: "Embroidery",
-    d: `Slow craft. One stitch at a time —
-good training for patience and attention to detail.
+    title: "Embroidery",
+    description: `Slow craft. One stitch at a time: good training for
+patience and attention to detail.
 
 Same skills, different medium.`
   },
-
   "loot-paint": {
-    t: "Painting",
-    d: `Small canvases, candles lit, a theme for the evening,
+    title: "Painting",
+    description: `Small canvases, candles lit, a theme for the evening,
 brush in hand.
 
 Quiet focus mode.`
   },
-
   "loot-walk": {
-    t: "Night walks",
-    d: `Lakeside paths next to a big park.
+    title: "Night walks",
+    description: `Lakeside paths next to a big park.
 Fresh air, night sky, headphones on.
 
 The best debugging happens away from the screen.`
   },
-
   "loot-drive": {
-    t: "Road trips",
-    d: `Long drives, music up, family outside the city.
+    title: "Road trips",
+    description: `Long drives, music up, family outside the city.
 
 Watching the road and the horizon is how I recharge.`
   },
-
   "loot-anime": {
-    t: "Anime",
-    d: `One Piece fan.
+    title: "Anime",
+    description: `One Piece fan.
 Over a thousand episodes of world-building,
-loyalty, and never giving up —
-decent life philosophy, honestly.`
+loyalty, and never giving up: decent life philosophy, honestly.`
   },
-
   "loot-board": {
-    t: "Board games",
-    d: `Strategy nights with close friends.
+    title: "Board games",
+    description: `Strategy nights with close friends.
 
-No noisy parties needed —
-good company and a good game beat a loud bar.`
+No noisy parties needed: good company and a good game
+beat a loud bar.`
   }
 };
 
+const lootPanel = document.getElementById("loot");
+const inventoryButtons = [...document.querySelectorAll(".slot[data-loot]")];
 
-const lootElement = document.getElementById("loot");
-const slots = document.querySelectorAll(".slot");
+inventoryButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const item = LOOT[button.dataset.loot];
+    if (!item || !lootPanel) return;
 
-slots.forEach((slot) => {
-  slot.addEventListener("click", () => {
-
-    // Remove selection from all slots
-    slots.forEach((item) => {
-      item.classList.remove("sel");
+    const deselect = button.getAttribute("aria-pressed") === "true";
+    inventoryButtons.forEach((other) => {
+      other.classList.remove("sel");
+      other.setAttribute("aria-pressed", "false");
     });
 
-    // Select current slot
-    slot.classList.add("sel");
-
-    const lootId = slot.dataset.loot;
-    const loot = LOOT[lootId];
-
-    if (!loot) {
+    if (deselect) {
+      lootPanel.classList.remove("show");
+      lootPanel.replaceChildren();
       return;
     }
 
-    // Insert content
-    lootElement.innerHTML = `
-      <h3>${loot.t}</h3>
-      <p style="white-space: pre-line">${loot.d}</p>
-    `;
-
-    // Show description
-    lootElement.classList.add("show");
+    button.classList.add("sel");
+    button.setAttribute("aria-pressed", "true");
+    const heading = document.createElement("h3");
+    heading.textContent = item.title;
+    const description = document.createElement("p");
+    description.textContent = item.description;
+    lootPanel.replaceChildren(heading, description);
+    lootPanel.classList.add("show");
   });
 });
 
-
-/* =========================================
-   TERMINAL
-   ========================================= */
-
+/* Hidden terminal: accessible open, close, keyboard and outside-click behavior. */
 const terminal = document.getElementById("terminal");
+const terminalTrigger = document.getElementById("term-trigger");
+const terminalClose = document.getElementById("term-close");
 const terminalBody = document.getElementById("tbody");
 const terminalInput = document.getElementById("tin");
-const terminalTrigger = document.getElementById("term-trigger");
+const terminalInputRow = terminalBody?.querySelector(".t-in");
 
-const terminalClose = document.getElementById("term-close");
+function setTerminalOpen(open, restoreFocus = false) {
+  if (!terminal || !terminalTrigger) return;
+  terminal.classList.toggle("up", open);
+  terminal.setAttribute("aria-hidden", String(!open));
+  terminal.inert = !open;
+  terminalTrigger.setAttribute("aria-expanded", String(open));
+  if (open) terminalInput?.focus();
+  if (!open && restoreFocus) terminalTrigger.focus();
+}
 
-terminalClose.addEventListener("click", () => {
-  terminal.classList.remove("up");
-});
-
-
-/* Open terminal */
-
-terminalTrigger.addEventListener("click", () => {
-  terminal.classList.add("up");
-  terminalInput.focus();
-});
-
-
-/* Close terminal with Escape */
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    terminal.classList.remove("up");
+function printTerminal(text, isCommand = false) {
+  if (!terminalBody || !terminalInputRow) return;
+  const line = document.createElement("div");
+  line.className = "t-output";
+  if (isCommand) {
+    const prompt = document.createElement("span");
+    prompt.className = "prompt";
+    prompt.textContent = "$ ";
+    line.append(prompt);
   }
-});
+  line.append(document.createTextNode(text));
+  terminalBody.insertBefore(line, terminalInputRow);
+  terminalBody.scrollTop = terminalBody.scrollHeight;
+}
 
+function clearTerminal() {
+  terminalBody?.querySelectorAll(".t-output, .t-welcome").forEach((line) => line.remove());
+}
 
-/* Terminal commands */
-
-const CMDS = {
-  help: () =>
-    `available: whoami, cat /about/me, ls ~/skills, sudo hire-me`,
-
-  whoami: () =>
-    `student
-developer
-mathematics enjoyer
-gamer
-night walker`,
-
-  "cat /about/me": () =>
-    `Fast learner. Multitasker. Thirteen years of client-facing work.
-Currently: Applied Informatics, 2nd year.
-Status: available for freelance.`,
-
-  "ls ~/skills": () =>
-    `C  C++  Python  JavaScript  Linux  OOP  networking  HTML/CSS
-+ whatever you need (give me a week)`,
-
+const TERMINAL_COMMANDS = {
+  help: () => "Commands: help, whoami, pwd, ls, ls ~/skills, cat /about/me, sudo hire-me, clear, exit",
+  whoami: () => "student\ndeveloper\nmathematics enthusiast\ngamer\nnight walker",
+  pwd: () => "/home/guest",
+  ls: () => "about/  projects/  skills/  contact/",
+  "ls ~/skills": () => "C  C++  Python  JavaScript  Linux  OOP  networking  HTML/CSS\n...and always learning",
+  "cat /about/me": () => "Fast learner. Creative problem-solver. Years of client-facing work.\nCurrently: Applied Informatics, second year.\nStatus: available for freelance.",
   "sudo hire-me": () => {
-    setTimeout(() => {
-      document
-        .getElementById("contact")
-        .scrollIntoView({
-          behavior: "smooth"
-        });
-    }, 800);
-
-    return "access granted. redirecting to contacts...";
+    setTerminalOpen(false);
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+    return "Access granted. Opening contact section...";
+  },
+  clear: () => {
+    clearTerminal();
+    return null;
+  },
+  exit: () => {
+    setTerminalOpen(false, true);
+    return "Session closed.";
   }
 };
 
+terminalTrigger?.addEventListener("click", () => {
+  setTerminalOpen(!terminal.classList.contains("up"));
+});
+terminalClose?.addEventListener("click", () => setTerminalOpen(false, true));
 
-/* =========================================
-   TERMINAL INPUT
-   ========================================= */
-
-terminalInput.addEventListener("keydown", (event) => {
-
-  // Only Enter executes a command
-  if (event.key !== "Enter") {
-    return;
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && terminal?.classList.contains("up")) {
+    event.preventDefault();
+    setTerminalOpen(false, true);
   }
+});
 
-  const value = terminalInput.value.trim().toLowerCase();
+document.addEventListener("pointerdown", (event) => {
+  if (terminal?.classList.contains("up") &&
+      !terminal.contains(event.target) &&
+      !terminalTrigger?.contains(event.target)) {
+    setTerminalOpen(false);
+  }
+});
 
-  // Clear input
+terminalInput?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" || event.isComposing) return;
+  event.preventDefault();
+  const raw = terminalInput.value.trim();
   terminalInput.value = "";
+  if (!raw) return;
 
-  // Don't do anything for empty command
-  if (!value) {
+  const command = raw.replace(/\s+/g, " ").toLowerCase();
+  if (command === "clear") {
+    clearTerminal();
     return;
   }
 
-  // Print entered command
-  echo(`<span class="prompt">$</span> ${escapeHTML(value)}`);
-
-  // Execute command
-  if (CMDS[value]) {
-    const result = CMDS[value]();
-
-    echo(escapeHTML(result));
-  } else {
-    echo(
-      `command not found: ${escapeHTML(value)} — try "help"`
-    );
-  }
-
-  // Scroll terminal to bottom
-  terminalBody.scrollTop = terminalBody.scrollHeight;
+  printTerminal(raw, true);
+  const handler = Object.prototype.hasOwnProperty.call(TERMINAL_COMMANDS, command)
+    ? TERMINAL_COMMANDS[command]
+    : null;
+  const result = handler ? handler() : `Command not found: ${raw}. Type "help" for commands.`;
+  if (result) printTerminal(result);
 });
 
-
-/* =========================================
-   TERMINAL OUTPUT
-   ========================================= */
-
-function echo(html) {
-  const line = document.createElement("div");
-
-  line.innerHTML = html;
-
-  const inputLine = terminalBody.querySelector(".t-in");
-
-  terminalBody.insertBefore(line, inputLine);
-}
-
-
-/* =========================================
-   HTML ESCAPE
-   Prevents user input from becoming HTML
-   ========================================= */
-
-function escapeHTML(text) {
-  const div = document.createElement("div");
-
-  div.textContent = text;
-
-  return div.innerHTML;
-}
-
-
-/* =========================================
-   OPEN CURRENT TIMELINE ITEM
-   ========================================= */
-
-document.addEventListener("DOMContentLoaded", () => {
-  const openedPeriod = document.querySelector(".period.open");
-
-  if (openedPeriod) {
-    const card = openedPeriod.querySelector(".card");
-
-    if (card) {
-      card.style.maxHeight = card.scrollHeight + "px";
-    }
-  }
-});
-
-
-/* =========================================
-   UPDATE ACCORDION HEIGHT ON RESIZE
-   ========================================= */
-
-window.addEventListener("resize", () => {
-  const openedPeriod = document.querySelector(".period.open");
-
-  if (!openedPeriod) {
-    return;
-  }
-
-  const card = openedPeriod.querySelector(".card");
-
-  if (card) {
-    card.style.maxHeight = card.scrollHeight + "px";
-  }
-});
-
-
-/* PHOTO BEFORE / AFTER COMPARISON */
-
-document.querySelectorAll('[data-compare]').forEach((comparison) => {
-  const slider = comparison.querySelector('.compare-range');
-
-  if (!slider) return;
-
-  function renderSplit() {
-    comparison.style.setProperty(
-      '--compare-split',
-      slider.value + '%'
-    );
-
-    slider.setAttribute(
-      'aria-valuetext',
-      slider.value + '% before image'
-    );
-  }
-
-  slider.addEventListener('input', renderSplit);
-  renderSplit();
-});
-/* =========================================================
-   AUTO PHOTO RESTORATION GALLERY
-
-   Add paired images in:
-     assets/restoration/Before/1.jpg
-     assets/restoration/After/1.jpg
-     assets/restoration/Before/2.png
-     assets/restoration/After/2.png
-
-   Filenames must match, including extension and case.
-   Numbers must be consecutive starting from 1 (no gaps).
-   Supported: jpg, jpeg, png, webp.
-   No HTML edits for additional pairs.
-
-   This probes sequentially named files because GitHub Pages
-   does not provide a directory listing API.
-   ========================================================= */
-
+/* Before/after gallery: detect files on static hosting without a server API. */
 (() => {
-  const gallery = document.getElementById('restoration-gallery');
+  const gallery = document.getElementById("restoration-gallery");
   if (!gallery) return;
 
-  const base = 'assets/restoration/';
-  const formats = ['jpg', 'jpeg', 'png', 'webp'];
-  const maxPairs = 100; // Safety limit; increase if needed.
+  const root = "assets/restoration";
+  const extensions = ["jpg", "jpeg", "png", "webp"];
+  const maxIndex = 100;
+  const maxConsecutiveMissing = 3;
 
-  function imageExists(url) {
+  function checkImage(url) {
     return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => resolve({
+      const image = new Image();
+      image.onload = () => resolve({
         url,
-        width: img.naturalWidth,
-        height: img.naturalHeight
+        width: image.naturalWidth,
+        height: image.naturalHeight
       });
-      img.onerror = () => resolve(null);
-      img.src = url;
+      image.onerror = () => resolve(null);
+      image.src = url;
     });
   }
 
-  async function findMatchingPair(index) {
-    for (const extension of formats) {
-      const name = `${index}.${extension}`;
-      const [before, after] = await Promise.all([
-        imageExists(`${base}Before/${name}`),
-        imageExists(`${base}After/${name}`)
-      ]);
-      if (before && after) return { name, before, after };
+  async function findImage(folder, index) {
+    for (const extension of extensions) {
+      const image = await checkImage(`${root}/${folder}/${index}.${extension}`);
+      if (image) return image;
     }
     return null;
   }
 
-  function activateSlider(compare) {
-    const slider = compare.querySelector('.compare-range');
-    if (!slider) return;
-    const update = () => {
-      compare.style.setProperty('--compare-split', `${slider.value}%`);
-      slider.setAttribute('aria-valuetext', `${slider.value}% original image visible`);
-    };
-    slider.addEventListener('input', update);
-    update();
+  async function findPair(index) {
+    // Original and restored files may use different extensions.
+    const [before, after] = await Promise.all([
+      findImage("Before", index),
+      findImage("After", index)
+    ]);
+    return before && after ? { before, after } : null;
   }
 
-  function createCard(pair, index) {
-    const card = document.createElement('article');
-    card.className = 'restoration-card';
-    // Set ratio from AFTER image; no fixed 16:9 crop for portraits.
-    const ratio = pair.after.width + ' / ' + pair.after.height;
+  function createRestorationCard(pair, index) {
+    const card = document.createElement("article");
+    card.className = "restoration-card";
+    const ratio = `${pair.after.width} / ${pair.after.height}`;
+
+    // Image URLs are constructed from fixed local directories and numeric indices.
     card.innerHTML = `
-      <div class="compare" data-compare
-           style="--compare-split:50%; --photo-ratio:${ratio}">
-        <img class="compare-after" src="${pair.after.url}"
-             alt="Restored photograph ${index}" draggable="false" decoding="async">
-        <img class="compare-before" src="${pair.before.url}"
-             alt="Original photograph ${index}" draggable="false" decoding="async">
+      <div class="compare" data-compare style="--compare-split:50%;--photo-ratio:${ratio}">
+        <img class="compare-after" src="${pair.after.url}" alt="Restored photograph ${index}" loading="lazy" decoding="async" draggable="false">
+        <img class="compare-before" src="${pair.before.url}" alt="Original photograph ${index}" loading="lazy" decoding="async" draggable="false">
         <span class="compare-label compare-label--before" aria-hidden="true">Before</span>
         <span class="compare-label compare-label--after" aria-hidden="true">[ RESTORED ]</span>
         <span class="compare-divider" aria-hidden="true"><span class="compare-handle">◀ ▶</span></span>
-        <input class="compare-range" type="range" min="0" max="100" value="50"
-               aria-label="Compare original and restored photograph ${index}">
+        <input class="compare-range" type="range" min="0" max="100" step="1" value="50" aria-label="Reveal original photograph ${index}">
       </div>
       <div class="restoration-copy">
-        <div>
-          <p class="project-type">Photo restoration · Before / After</p>
-          <h4>Restored photograph</h4>
-        </div>
+        <div><p class="project-type">Photo restoration · Before / After</p><h4>Restored photograph ${index}</h4></div>
         <span class="restoration-note">Drag to reveal ↔</span>
       </div>`;
-    activateSlider(card.querySelector('[data-compare]'));
+
+    const slider = card.querySelector(".compare-range");
+    const comparison = card.querySelector(".compare");
+    const update = () => {
+      comparison.style.setProperty("--compare-split", `${slider.value}%`);
+      slider.setAttribute("aria-valuetext", `${slider.value}% of the original image visible`);
+    };
+    slider.addEventListener("input", update);
+    update();
     return card;
   }
 
-  async function loadGallery() {
-    let count = 0;
-    const loading = gallery.querySelector('.restoration-loading');
+  async function loadRestorations() {
+    let consecutiveMissing = 0;
+    let loaded = 0;
+    const status = gallery.querySelector(".restoration-loading");
 
-    for (let index = 1; index <= maxPairs; index++) {
-      const pair = await findMatchingPair(index);
-      if (!pair) break; // First missing number marks the end.
-      if (loading) loading.remove();
-      gallery.appendChild(createCard(pair, index));
-      count++;
+    for (let index = 1; index <= maxIndex && consecutiveMissing < maxConsecutiveMissing; index++) {
+      const pair = await findPair(index);
+      if (!pair) {
+        consecutiveMissing++;
+        continue;
+      }
+
+      consecutiveMissing = 0;
+      status?.remove();
+      gallery.append(createRestorationCard(pair, index));
+      loaded++;
     }
 
-    if (!count) {
-      gallery.textContent = 'No matching photo pairs found in Before / After.';
-      gallery.classList.add('restoration-gallery--empty');
+    if (!loaded) {
+      gallery.classList.add("restoration-gallery--empty");
+      gallery.textContent = "No restoration examples are available yet.";
     }
   }
 
-  loadGallery();
+  loadRestorations().catch(() => {
+    gallery.classList.add("restoration-gallery--empty");
+    gallery.textContent = "The restoration gallery could not be loaded.";
+  });
 })();
-
-/* =========================================
-   CLOSE TERMINAL ON OUTSIDE CLICK
-   ========================================= */
-
-document.addEventListener("click", (event) => {
-  const isOpen = terminal.classList.contains("up");
-
-  if (!isOpen) return;
-
- 
-  if (terminal.contains(event.target)) return;
-
- 
-  if (terminalTrigger.contains(event.target)) return;
-
-  
-  terminal.classList.remove("up");
-});
