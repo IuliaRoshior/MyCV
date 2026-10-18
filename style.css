@@ -828,3 +828,280 @@ footer{border-top:1px solid var(--line);padding:40px 0;color:var(--dim);font-siz
 }
 
 @media(max-width:600px){.artifact{display:none}}
+
+
+/* =========================================
+   PROJECTS — LARGER & MORE READABLE
+   ========================================= */
+
+/* Общая ширина секции */
+.portfolio-root .wrap {
+  max-width: 1120px;
+}
+
+/* Заголовки разделов */
+.portfolio-root .portfolio-group h3 {
+  font-size: 1.75rem;
+}
+
+.portfolio-root .portfolio-kicker {
+  font-size: .78rem;
+}
+
+.portfolio-root .portfolio-group-desc {
+  font-size: .95rem;
+}
+
+/* Навигация по разделам */
+.portfolio-root .portfolio-nav a {
+  font-size: .88rem;
+}
+
+/* Расстояние между карточками */
+.portfolio-root .portfolio-grid {
+  gap: 16px;
+}
+
+/* Количество карточек в строке */
+.portfolio-root .portfolio-grid--web,
+.portfolio-root .portfolio-grid--figma,
+.portfolio-root .portfolio-grid--print {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Высота верхней части карточек */
+.portfolio-root {
+  --tile-preview-height: 100px;
+}
+
+/* Внутренние отступы */
+.portfolio-root .portfolio-card-body,
+.portfolio-root .portfolio-card--figma .portfolio-card-body,
+.portfolio-root .portfolio-card--print .portfolio-card-body {
+  padding: 16px 17px;
+}
+
+/* Тип проекта */
+.portfolio-root .project-type {
+  font-size: .72rem;
+  margin-bottom: 8px;
+}
+
+/* Название проекта */
+.portfolio-root .portfolio-card h4 {
+  font-size: 1.12rem;
+  margin-bottom: 9px;
+}
+
+/* Описание */
+.portfolio-root .project-description {
+  font-size: .85rem;
+  line-height: 1.6;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* Игровые кнопки RUN.EXE / BLUEPRINT */
+.portfolio-root .project-preview > a.preview-index {
+  font-size: .68rem;
+  padding: 5px 9px;
+  min-height: 31px;
+}
+
+/* Планшеты */
+@media (max-width: 800px) {
+  .portfolio-root .portfolio-grid--web,
+  .portfolio-root .portfolio-grid--figma,
+  .portfolio-root .portfolio-grid--print {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Телефоны */
+@media (max-width: 600px) {
+  .portfolio-root .portfolio-grid--web,
+  .portfolio-root .portfolio-grid--figma,
+  .portfolio-root .portfolio-grid--print {
+    grid-template-columns: 1fr;
+  }
+
+  .portfolio-root .project-preview,
+  .portfolio-root .portfolio-card--figma .project-preview,
+  .portfolio-root .portfolio-card--print .project-preview {
+    width: 108px;
+    flex: 0 0 108px;
+    min-height: 120px;
+    height: auto;
+  }
+
+  .portfolio-root .portfolio-card h4 {
+    font-size: 1rem;
+  }
+
+  .portfolio-root .project-description {
+    font-size: .78rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .portfolio-root .project-preview > a.preview-index {
+    font-size: .56rem;
+    padding: 4px 5px;
+  }
+}
+
+.portfolio-root .compare-label--before {
+  color: #bba0ff;
+  border-color: rgba(187, 160, 255, .65);
+  background: rgba(6, 13, 19, .94);
+  text-shadow: 0 0 6px rgba(187, 160, 255, .2);
+}
+
+
+/* =========================================
+   PROJECTS — CATEGORY COLORS
+   ========================================= */
+
+/* Цвета подразделов */
+#projects-web {
+  --category-color: #3ddc84;
+}
+
+#projects-figma {
+  --category-color: #4fd6ff;
+}
+
+#projects-photoshop {
+  --category-color: #ffb454;
+}
+
+#projects-restoration {
+  --category-color: #bba0ff;
+}
+
+/* Подписи над заголовками разделов */
+.portfolio-root .portfolio-group .portfolio-kicker {
+  color: var(--category-color);
+}
+
+/* Тип проекта внутри карточки */
+.portfolio-root .portfolio-group .project-type {
+  color: var(--category-color);
+}
+
+/* Цвет второй части заголовка раздела */
+.portfolio-root .portfolio-group h3 em {
+  color: var(--category-color);
+}
+
+/* RESTORATION — Drag to reveal */
+
+.portfolio-root #projects-restoration .restoration-note {
+  color: var(--category-color);
+  border-color: var(--category-color);
+}
+
+.portfolio-root #projects-restoration .restoration-note span {
+  color: var(--category-color);
+}
+
+/* =========================================
+   RETRO TERMINAL LAUNCHER
+   ========================================= */
+
+.terminal-launch-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.terminal-hint {
+  color: var(--dim);
+  font-size: .7rem;
+  letter-spacing: .12em;
+}
+
+#term-trigger.terminal-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 20px;
+  background: #101a17;
+  border: 1px solid var(--green);
+  border-radius: 0;
+
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+
+  cursor: pointer;
+  transition: .2s ease;
+
+  box-shadow: 0 0 12px rgba(61,220,132,.12);
+}
+
+/* Blinking status indicator */
+.terminal-led {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: terminal-pulse 1.5s infinite;
+}
+
+@keyframes terminal-pulse {
+  50% {
+    opacity: .25;
+  }
+}
+
+/* Hover effect */
+#term-trigger.terminal-launch:hover {
+  color: #0a0e12;
+  background: var(--green);
+  box-shadow: 0 0 25px rgba(61,220,132,.4);
+  transform: translateY(-2px);
+}
+
+#term-trigger.terminal-launch:hover .terminal-led {
+  background: #0a0e12;
+  box-shadow: none;
+}
+
+.terminal-arrow {
+  margin-left: 8px;
+}
+
+.terminal-launch-area small {
+  color: var(--dim);
+  font-size: .67rem;
+  letter-spacing: .06em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-led {
+    animation: none;
+  }
+}
+#term-trigger.terminal-launch {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 900;
+}
+
+@media (max-width: 600px) {
+  #term-trigger.terminal-launch {
+    right: 12px;
+    bottom: 12px;
+    padding: 10px 12px;
+    font-size: .72rem;
+  }
+}
+

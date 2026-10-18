@@ -443,3 +443,22 @@ document.querySelectorAll('[data-compare]').forEach((comparison) => {
 
   loadGallery();
 })();
+
+/* =========================================
+   CLOSE TERMINAL ON OUTSIDE CLICK
+   ========================================= */
+
+document.addEventListener("click", (event) => {
+  const isOpen = terminal.classList.contains("up");
+
+  if (!isOpen) return;
+
+ 
+  if (terminal.contains(event.target)) return;
+
+ 
+  if (terminalTrigger.contains(event.target)) return;
+
+  
+  terminal.classList.remove("up");
+});
