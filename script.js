@@ -308,3 +308,138 @@ window.addEventListener("resize", () => {
     card.style.maxHeight = card.scrollHeight + "px";
   }
 });
+
+
+/* PHOTO BEFORE / AFTER COMPARISON */
+
+document.querySelectorAll('[data-compare]').forEach((comparison) => {
+  const slider = comparison.querySelector('.compare-range');
+
+  if (!slider) return;
+
+  function renderSplit() {
+    comparison.style.setProperty(
+      '--compare-split',
+      slider.value + '%'
+    );
+
+    slider.setAttribute(
+      'aria-valuetext',
+      slider.value + '% before image'
+    );
+  }
+
+  slider.addEventListener('input', renderSplit);
+  renderSplit();
+});
+/* =========================================================
+   AUTO PHOTO RESTORATION GALLERY
+
+   Add paired images in:
+     assets/restoration/Before/1.jpg
+     assets/restoration/After/1.jpg
+     assets/restoration/Before/2.png
+     assets/restoration/After/2.png
+
+   Filenames must match, including extension and case.
+   Numbers must be consecutive starting from 1 (no gaps).
+   Supported: jpg, jpeg, png, webp.
+   No HTML edits for additional pairs.
+
+   This probes sequentially named files because GitHub Pages
+   does not provide a directory listing API.
+   ========================================================= */
+
+(() => {
+  const gallery = document.getElementById('restoration-gallery');
+  if (!gallery) return;
+
+  const base = 'assets/restoration/';
+  const formats = ['jpg', 'jpeg', 'png', 'webp'];
+  const maxPairs = 100; // Safety limit; increase if needed.
+
+  function imageExists(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({
+        url,
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      });
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  async function findMatchingPair(index) {
+    for (const extension of formats) {
+      const name = `${index}.${extension}`;
+      const [before, after] = await Promise.all([
+        imageExists(`${base}Before/${name}`),
+        imageExists(`${base}After/${name}`)
+      ]);
+      if (before && after) return { name, before, after };
+    }
+    return null;
+  }
+
+  function activateSlider(compare) {
+    const slider = compare.querySelector('.compare-range');
+    if (!slider) return;
+    const update = () => {
+      compare.style.setProperty('--compare-split', `${slider.value}%`);
+      slider.setAttribute('aria-valuetext', `${slider.value}% original image visible`);
+    };
+    slider.addEventListener('input', update);
+    update();
+  }
+
+  function createCard(pair, index) {
+    const card = document.createElement('article');
+    card.className = 'restoration-card';
+    // Set ratio from AFTER image; no fixed 16:9 crop for portraits.
+    const ratio = pair.after.width + ' / ' + pair.after.height;
+    card.innerHTML = `
+      <div class="compare" data-compare
+           style="--compare-split:50%; --photo-ratio:${ratio}">
+        <img class="compare-after" src="${pair.after.url}"
+             alt="Restored photograph ${index}" draggable="false" decoding="async">
+        <img class="compare-before" src="${pair.before.url}"
+             alt="Original photograph ${index}" draggable="false" decoding="async">
+        <span class="compare-label compare-label--before" aria-hidden="true">Before</span>
+        <span class="compare-label compare-label--after" aria-hidden="true">[ RESTORED ]</span>
+        <span class="compare-divider" aria-hidden="true"><span class="compare-handle">◀ ▶</span></span>
+        <input class="compare-range" type="range" min="0" max="100" value="50"
+               aria-label="Compare original and restored photograph ${index}">
+      </div>
+      <div class="restoration-copy">
+        <div>
+          <p class="project-type">Photo restoration · Before / After</p>
+          <h4>Restored photograph</h4>
+        </div>
+        <span class="restoration-note">Drag to reveal ↔</span>
+      </div>`;
+    activateSlider(card.querySelector('[data-compare]'));
+    return card;
+  }
+
+  async function loadGallery() {
+    let count = 0;
+    const loading = gallery.querySelector('.restoration-loading');
+
+    for (let index = 1; index <= maxPairs; index++) {
+      const pair = await findMatchingPair(index);
+      if (!pair) break; // First missing number marks the end.
+      if (loading) loading.remove();
+      gallery.appendChild(createCard(pair, index));
+      count++;
+    }
+
+    if (!count) {
+      gallery.textContent = 'No matching photo pairs found in Before / After.';
+      gallery.classList.add('restoration-gallery--empty');
+    }
+  }
+
+  loadGallery();
+})();
